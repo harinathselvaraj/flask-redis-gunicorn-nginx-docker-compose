@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+
+  flask:
+    build: ./flask
+    container_name: flask
+    restart: always
+    env_file:
+      - dev.env
+    expose:
+      - 8080
+    depends_on:
+      - redis
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      # - "80:80"
+      - "3000:80" #changed from 80 to 3000 since 80 is already used by default apache server
+    depends_on:
+      - flask
+
+  redis:
+    image: "redis:4.0.4-alpine"
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
